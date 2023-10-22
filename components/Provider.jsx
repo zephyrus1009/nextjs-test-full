@@ -1,8 +1,12 @@
-import React from 'react'
+// file này hỗ trợ đăng nhập bằng google auth, next-auth
+'use client';
+// dùng khả năng của browser, cho nên sẽ là client component
+import {SessionProvider}  from 'next-auth/react';
 
-const Provider = () => {
+const Provider = ({children, session}) => {
   return (
-    <div>Provider</div>
+    <SessionProvider session={session}>{children}
+    </SessionProvider>
   )
 }
 
