@@ -1,4 +1,4 @@
-// file này dùng để tạo model user. Tức là một user phải có những thông tin gì.
+// file này dùng để tạo model schema data user. Tức là một user phải có những thông tin gì.
 import {Schema, model, models} from 'mongoose';
 
 const UserSchema = new Schema({
