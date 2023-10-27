@@ -1,4 +1,4 @@
-// file này nhằm mục đích lấy tất các prompts từ database xuống
+// file này nhằm mục đích lấy tất các prompts từ user đang đăng nhập xuống
 import { connectToDB } from "@utils/database";
 import Prompt from "@models/prompt";
 
