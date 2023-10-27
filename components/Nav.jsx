@@ -4,7 +4,7 @@ import Link from "next/link";
 // dùng để navigate giữa các page khác nhau
 import Image from "next/image";
 // giúp tối ưu ảnh một cách tự động
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 // để sử dụng react hook
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 // hỗ trợ việc signIn, signout
@@ -12,55 +12,57 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 const Nav = () => {
   //const isUserLoggedIn = true; 
   // Khai báo biến để quản lý trạng thái đăng nhập của user. Vì trước và sau khi đăng nhập thì giao diện web sẽ khác nhau, nên cần quản lý trạng thái này để hiển thị tương ứng. Khi còn đang code thì ta sẽ để biến này true hoặc false tuỳ theo ta đang muốn code hiển thị cho trạng thái nào.
-const {data: session} = useSession();
+  const { data: session } = useSession();
 // sau khi đã liên kết được với google auth thì đã có thể dùng lệnh này để lấy data thực sự về việc log in. và mọi chỗ dùng biến isUserLoggedIn trong file này sẽ được thay bằng session?.user
 
   // đoạn code dưới đây hỗ trợ signin bằng google và next-auth
   const [providers, setProviders] = useState(null);
   // cấu trúc để dùng hook là mảng sẽ chứa: biến chứa trạng thái và hàm xử lý khi trạng thái thay đổi.
-  useEffect(() => {
-    const setUpProviders = async () => {
-      const response = await getProviders();
-      setProviders(response);
-    };
-    setUpProviders();
-  }, []);
-
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
+
   return (
-    <nav className="flex-between w-full mb-16 pt-3">
-      <Link href="/" className="flex gap-2 flex-center">
+    <nav className='flex-between w-full mb-16 pt-3'>
+      <Link href='/' className='flex gap-2 flex-center'>
         <Image
-          src="/assets/images/logo.svg"
-          alt="Promptopia logo"
+          src='/assets/images/logo.svg'
+          alt='logo'
           width={30}
           height={30}
-          className="object-contain"
+          className='object-contain'
         />
-        <p className="logo_text">Promptopia</p>
+        <p className='logo_text'>Promptopia</p>
       </Link>
-      {/* toàn bộ đoạn link này để khi kích vào logo thì sẽ về trang chủ (root) */}
+{/* toàn bộ đoạn link này để khi kích vào logo thì sẽ về trang chủ (root) */}
 
       {/* đoạn này giúp hỗ trợ desktop navigation, tức nó sẽ hiển thị trên thiết bị kích thước từ small trở lên */}
       {/* desktop navigation */}
+      {/* <div className='sm:flex hidden'> */}
       <div className="invisible sm:flex sm:visible">
         {/* Lưu ý: tailwind, bootstrap và các css framework khác đều là mobile first design. Do đó, các class không có variant theo sau sẽ được áp vào cho smaller screen first, sau đó mới áp đến class với variant cho bigger screen. Do đó, ở trên hiểu là mặc định là invisible, cho đến khi screen tăng đến kích thước small thì mới visible và có kiểu flex. Bình thường có thể viết là hidden sm: flex. Nhưng đang bị lỗi, chỉ sửa thành như trên mới chạy, còn không thì luôn bị hidden. */}
         {session?.user ? (
-          <div className="flex gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
+          <div className='flex gap-3 md:gap-5'>
+            <Link href='/create-prompt' className='black_btn'>
               Create Post
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
+
+            <button type='button' onClick={signOut} className='outline_btn'>
               Sign Out
             </button>
-            <Link href="/profile">
+
+            <Link href='/profile'>
               <Image
                 src={session?.user.image}
                 width={37}
                 height={37}
-                className="rounded-full"
-                alt="profile"
+                className='rounded-full'
+                alt='profile'
               />
             </Link>
           </div>
@@ -70,12 +72,14 @@ const {data: session} = useSession();
             {providers &&
               Object.values(providers).map((provider) => (
                 <button
-                  type="button"
+                  type='button'
                   key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className='black_btn'
                 >
-                  Sign In
+                  Sign in
                 </button>
                 // nếu người dùng chưa login thì hiện nút Sign In
               ))}
@@ -83,24 +87,25 @@ const {data: session} = useSession();
         )}
       </div>
 
+      {/* Mobile Navigation */}
       {/* đoạn này giúp hỗ trợ mobile navigation, tức nó sẽ chỉ hiển thị trên thiết bị kích thước bé hơn small */}
-      <div className="sm:hidden flex relative">
+      <div className='sm:hidden flex relative'>
         {session?.user ? (
-          <div className="flex">
+          <div className='flex'>
             <Image
               src={session?.user.image}
               width={37}
               height={37}
-              className="rounded-full"
-              alt="profile"
+              className='rounded-full'
+              alt='profile'
               onClick={() => setToggleDropdown((prev) => !prev)}
             />
-            {/* khi bấm vào ảnh thì hàm xử lý setToggleDropdown sẽ gọi ra một callback function lấy trạng thái trước đó prev và thay đổi nó. */}
+{/* khi bấm vào ảnh thì hàm xử lý setToggleDropdown sẽ gọi ra một callback function lấy trạng thái trước đó prev và thay đổi nó. */}
             {toggleDropdown && (
-              <div className="dropdown">
+              <div className='dropdown'>
                 <Link
-                  href="/profile"
-                  className="dropdown_link"
+                  href='/profile'
+                  className='dropdown_link'
                   onClick={() => setToggleDropdown(false)}
                 >
                   My Profile
@@ -109,19 +114,19 @@ const {data: session} = useSession();
 
                 {/* làm tương tự cho Creat Post */}
                 <Link
-                  href="/create-prompt"
-                  className="dropdown_link"
+                  href='/create-prompt'
+                  className='dropdown_link'
                   onClick={() => setToggleDropdown(false)}
                 >
                   Create Prompt
                 </Link>
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => {
                     setToggleDropdown(false);
                     signOut();
                   }}
-                  className="mt-5 w-full black_btn"
+                  className='mt-5 w-full black_btn'
                 >
                   Sign Out
                 </button>
@@ -135,12 +140,14 @@ const {data: session} = useSession();
             {providers &&
               Object.values(providers).map((provider) => (
                 <button
-                  type="button"
+                  type='button'
                   key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className='black_btn'
                 >
-                  Sign In
+                  Sign in
                 </button>
                 // nếu người dùng chưa đăng nhập thì hiện nút Sign In.
               ))}

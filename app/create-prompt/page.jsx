@@ -9,16 +9,15 @@ import Form from "@components/Form";
 
 const CreatePrompt = () => {
   const router = useRouter();
-  const {data: session} = useSession();
-  const [submitting, setSubmitting] = useState(false);
-  const [post, setPost] = useState({
-    prompt: "",
-    tag: "",
-  });
+  const { data: session } = useSession();
+
+  const [submitting, setIsSubmitting] = useState(false);
+  const [post, setPost] = useState({ prompt: "", tag: "" });
 
   const createPrompt = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    setIsSubmitting(true);
+
     try {
       const response = await fetch("/api/prompt/new", {
         method: "POST",
@@ -35,14 +34,14 @@ const CreatePrompt = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
       // khi đã đẩy được data lên thì submitting phải thành false.
     }
   };
 
   return (
     <Form
-      type="Create"
+      type='Create'
       post={post}
       setPost={setPost}
       submitting={submitting}

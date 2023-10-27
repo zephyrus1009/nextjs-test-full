@@ -18,6 +18,6 @@ match: [/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, "Username 
   // chỗ này chưa hiểu lắm vì sao image type là String.
 });
 
-const User = models.User ||model("User", UserSchema);
+const User = models.User || model("User", UserSchema);
 // cú pháp như trên hiểu là nếu đã tồn tại models.User thì dùng luôn, còn không thì mới tạo mới User.
 export default User;
